@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sprintsync-api-config
+  namespace: sprintsync
+data:
+  APP_NAME: "SprintSync"
+  ENVIRONMENT: "production"
+  DEBUG: "false"
+  CORS_ORIGINS: "https://sprintsync.dev"
+  CORS_METHODS: "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+  CORS_HEADERS: "authorization,content-type,x-correlation-id"
+  ALLOWED_HOSTS: "api.sprintsync.dev"
+  HSTS_ENABLED: "true"
+  ALGORITHM: "HS256"
+  ACCESS_TOKEN_EXPIRE_MINUTES: "15"
+  REFRESH_TOKEN_EXPIRE_DAYS: "7"
+  DATABASE_URL: "postgresql+asyncpg://sprintsync:$(POSTGRES_PASSWORD)@postgres.sprintsync.svc.cluster.local:5432/sprintsync"
+  REDIS_URL: "redis://redis.sprintsync.svc.cluster.local:6379"
+  CELERY_BROKER_URL: "redis://redis.sprintsync.svc.cluster.local:6379/0"
+  CELERY_RESULT_BACKEND: "redis://redis.sprintsync.svc.cluster.local:6379/0"
+  SMTP_HOST: "smtp.sendgrid.net"
+  SMTP_PORT: "587"
+  EMAIL_FROM: "noreply@sprintsync.dev"

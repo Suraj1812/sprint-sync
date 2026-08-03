@@ -1,0 +1,49 @@
+"""Paddle provider placeholder."""
+
+from typing import Any
+
+from app.billing.providers.base import PaymentProvider
+from app.core.config import get_settings
+from app.core.exceptions import ServiceUnavailableError
+
+
+class PaddleProvider(PaymentProvider):
+    name = "paddle"
+
+    def __init__(self) -> None:
+        settings = get_settings()
+        self._api_key = settings.paddle_api_key
+        self._webhook_secret = settings.paddle_webhook_secret
+
+    async def create_customer(
+        self,
+        email: str,
+        *,
+        metadata: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        raise ServiceUnavailableError("Paddle provider not yet implemented")
+
+    async def create_checkout_session(
+        self,
+        price_id: str,
+        customer_id: str,
+        *,
+        success_url: str,
+        cancel_url: str,
+        mode: str = "subscription",
+    ) -> dict[str, Any]:
+        raise ServiceUnavailableError("Paddle provider not yet implemented")
+
+    async def create_portal_session(
+        self,
+        customer_id: str,
+        *,
+        return_url: str,
+    ) -> dict[str, Any]:
+        raise ServiceUnavailableError("Paddle provider not yet implemented")
+
+    async def get_event(self, event_id: str) -> dict[str, Any] | None:
+        raise ServiceUnavailableError("Paddle provider not yet implemented")
+
+    def verify_signature(self, payload: bytes, signature: str) -> bool:
+        raise ServiceUnavailableError("Paddle provider not yet implemented")

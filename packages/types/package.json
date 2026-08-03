@@ -1,0 +1,16 @@
+{
+  "name": "@sprint-sync/types",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "devDependencies": {
+    "@sprint-sync/config": "workspace:*",
+    "typescript": "5.7.2"
+  }
+}

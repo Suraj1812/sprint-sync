@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sprintsync-web
+  namespace: sprintsync
+  labels:
+    app: sprintsync-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sprintsync-web
+  template:
+    metadata:
+      labels:
+        app: sprintsync-web
+    spec:
+      containers:
+        - name: web
+          image: sprintsync/web:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: NEXT_PUBLIC_API_URL
+              value: "https://api.sprintsync.dev"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sprintsync-web
+  namespace: sprintsync
+spec:
+  selector:
+    app: sprintsync-web
+  ports:
+    - port: 80
+      targetPort: 3000

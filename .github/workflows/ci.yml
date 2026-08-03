@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  web-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm --filter @sprint-sync/web format:check
+      - run: pnpm build
+
+  web-unit:
+    runs-on: ubuntu-latest
+    needs: web-quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @sprint-sync/web test
+
+  api-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -e "./apps/api[dev]"
+          ruff check apps/api
+          ruff format apps/api --check
+          mypy apps/api
+
+  api-tests:
+    runs-on: ubuntu-latest
+    needs: api-quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -e "./apps/api[dev]"
+          pytest apps/api/app/tests -q
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: web-quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm dlx playwright install --with-deps
+      - run: pnpm --filter @sprint-sync/web build
+      - run: pnpm --filter @sprint-sync/web test:e2e
+
+  security:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        if: github.event_name == 'pull_request'
+      - uses: pypa/gh-action-pip-audit@v1.1.0
+        with:
+          inputs: "./apps/api"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --audit-level moderate
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [web-unit, api-tests, security]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build web image
+        run: docker build -f docker/Dockerfile.web -t sprintsync/web:ci .
+      - name: Build api image
+        run: docker build -f docker/Dockerfile.api -t sprintsync/api:ci .

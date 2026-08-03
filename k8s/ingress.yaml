@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sprintsync-ingress
+  namespace: sprintsync
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - sprintsync.dev
+        - api.sprintsync.dev
+      secretName: sprintsync-tls
+  rules:
+    - host: sprintsync.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sprintsync-web
+                port:
+                  number: 80
+    - host: api.sprintsync.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sprintsync-api
+                port:
+                  number: 80

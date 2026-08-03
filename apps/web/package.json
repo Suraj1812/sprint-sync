@@ -1,0 +1,48 @@
+{
+  "name": "@sprint-sync/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
+  },
+  "dependencies": {
+    "@sprint-sync/ui": "workspace:*",
+    "@sprint-sync/utils": "workspace:*",
+    "@sprint-sync/validation": "workspace:*",
+    "framer-motion": "11.15.0",
+    "lucide-react": "0.469.0",
+    "next-themes": "0.4.4",
+    "next": "15.1.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "tailwindcss-animate": "1.0.7"
+  },
+  "devDependencies": {
+    "@sprint-sync/config": "workspace:*",
+    "@playwright/test": "1.49.1",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.1.0",
+    "@types/node": "22.10.2",
+    "@types/react": "19.0.2",
+    "@types/react-dom": "19.0.2",
+    "@vitejs/plugin-react": "4.3.4",
+    "autoprefixer": "10.4.20",
+    "jsdom": "25.0.1",
+    "playwright": "1.49.1",
+    "postcss": "8.4.49",
+    "tailwindcss": "3.4.17",
+    "typescript": "5.7.2",
+    "vitest": "2.1.8"
+  }
+}

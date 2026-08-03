@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+
+# Build outputs
+.next/
+out/
+dist/
+.turbo/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Environments
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# Testing
+coverage/
+test-results/
+playwright-report/
+playwright/.cache/
+.nyc_output/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
