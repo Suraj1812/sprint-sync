@@ -1,10 +1,10 @@
 "use client"
 
-import { Button } from "@sprint-sync/ui"
 import { Zap } from "lucide-react"
 
 import { ModeToggle } from "./mode-toggle"
 import { MobileNav } from "./mobile-nav"
+import { AuthDialog } from "./auth-dialog"
 
 const links = [
   { label: "Features", href: "#features" },
@@ -39,9 +39,7 @@ export function Nav() {
 
         <div className="hidden items-center gap-2 md:flex">
           <ModeToggle />
-          <Button asChild size="sm">
-            <a href="#cta">Get started</a>
-          </Button>
+          <AuthDialog />
         </div>
 
         <div className="flex items-center gap-2 md:hidden">

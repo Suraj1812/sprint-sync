@@ -4,6 +4,7 @@ import { Button, Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, Sep
 import { Menu } from "lucide-react"
 
 import { ModeToggle } from "./mode-toggle"
+import { AuthDialog } from "./auth-dialog"
 
 const links = [
   { label: "Features", href: "#features" },
@@ -36,9 +37,7 @@ export function MobileNav() {
             </a>
           ))}
           <Separator className="my-4" />
-          <Button asChild className="w-full">
-            <a href="#cta">Get started</a>
-          </Button>
+          <AuthDialog mobile />
           <div className="mt-4 flex items-center justify-between px-3">
             <span className="text-sm text-muted-foreground">Theme</span>
             <ModeToggle />
