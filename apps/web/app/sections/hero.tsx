@@ -1,8 +1,9 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowRight, Play, Star } from "lucide-react"
+import { ArrowRight, LogIn, Play, Star } from "lucide-react"
 
 import { Button, Avatar, AvatarImage, AvatarFallback } from "@sprint-sync/ui"
 import { fadeInUp, staggerContainer } from "@sprint-sync/ui/lib/animation"
@@ -82,6 +83,11 @@ export function Hero() {
                 >
                   <Play className="mr-2 h-4 w-4" /> Watch demo
                 </a>
+              </Button>
+              <Button asChild variant="secondary" size="lg" className="w-full sm:w-auto">
+                <Link href="/admin/login">
+                  <LogIn className="mr-2 h-4 w-4" /> Sign in
+                </Link>
               </Button>
             </motion.div>
             <motion.div
