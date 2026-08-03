@@ -71,7 +71,7 @@ export default async function RootLayout({
         >
           Skip to content
         </a>
-        <Providers>{children}</Providers>
+        <Providers nonce={nonce}>{children}</Providers>
         <StructuredData nonce={nonce} />
       </body>
     </html>

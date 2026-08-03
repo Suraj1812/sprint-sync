@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
   const nonce = generateNonce()
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
-  const cspHeader = [
+  const cspDirectives = [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
     "style-src 'self' 'unsafe-inline'",
@@ -22,8 +22,13 @@ export function middleware(request: NextRequest) {
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "upgrade-insecure-requests",
-  ].join("; ")
+  ]
+
+  if (request.nextUrl.protocol === "https:") {
+    cspDirectives.push("upgrade-insecure-requests")
+  }
+
+  const cspHeader = cspDirectives.join("; ")
 
   const response = NextResponse.next({
     request: {
