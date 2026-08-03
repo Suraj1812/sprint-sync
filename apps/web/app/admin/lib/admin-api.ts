@@ -1,6 +1,7 @@
 "use client"
 
 const ADMIN_API = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/v1/admin`
+const AI_API = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/v1/ai`
 
 function getToken(): string | null {
   if (typeof window === "undefined") return null
@@ -25,6 +26,29 @@ async function adminFetch(path: string, options: RequestInit = {}) {
 
   if (!res.ok) {
     throw new Error(`Admin API error: ${res.status}`)
+  }
+
+  return res.json()
+}
+
+async function aiFetch(path: string, options: RequestInit = {}) {
+  const token = getToken()
+  const res = await fetch(`${AI_API}${path}`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    ...options,
+  })
+
+  if (res.status === 401) {
+    window.location.href = "/admin/login"
+    return null
+  }
+
+  if (!res.ok) {
+    throw new Error(`AI API error: ${res.status}`)
   }
 
   return res.json()
@@ -78,29 +102,29 @@ export const adminApi = {
     return res
   },
   aiChat: (body: object) =>
-    adminFetch("/ai/chat", {
+    aiFetch("/chat", {
       method: "POST",
       body: JSON.stringify(body),
     }),
   createPrompt: (body: object) =>
-    adminFetch("/ai/prompts", {
+    aiFetch("/prompts", {
       method: "POST",
       body: JSON.stringify(body),
     }),
   listPrompts: (skip = 0, limit = 50) =>
-    adminFetch(`/ai/prompts?skip=${skip}&limit=${limit}`),
+    aiFetch(`/prompts?skip=${skip}&limit=${limit}`),
   ingestDocument: (body: object) =>
-    adminFetch("/ai/documents", {
+    aiFetch("/documents", {
       method: "POST",
       body: JSON.stringify(body),
     }),
   searchDocuments: (body: object) =>
-    adminFetch("/ai/documents/search", {
+    aiFetch("/documents/search", {
       method: "POST",
       body: JSON.stringify(body),
     }),
-  aiUsage: () => adminFetch("/ai/usage"),
-  listAIProviders: () => adminFetch("/ai/providers"),
+  aiUsage: () => aiFetch("/usage"),
+  listAIProviders: () => aiFetch("/providers"),
   listPlans: (skip = 0, limit = 50) =>
     adminFetch(`/billing/plans?skip=${skip}&limit=${limit}`),
   getPlan: (id: string) => adminFetch(`/billing/plans/${id}`),

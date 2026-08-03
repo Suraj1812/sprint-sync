@@ -34,7 +34,11 @@ async def get_current_user(
     if not token:
         raise AuthenticationError("Missing authentication token")
 
-    payload = decode_token(token, "access")
+    try:
+        payload = decode_token(token, "access")
+    except AuthenticationError:
+        payload = decode_token(token, "admin")
+
     user_id = payload.get("sub")
     if not user_id:
         raise AuthenticationError("Invalid token payload")
