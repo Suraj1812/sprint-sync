@@ -50,12 +50,13 @@ export const viewport: Viewport = {
   ],
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const nonce = headers().get("x-nonce") ?? undefined
+  const h = await headers()
+  const nonce = h.get("x-nonce") ?? undefined
 
   return (
     <html

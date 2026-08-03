@@ -14,7 +14,7 @@ class Document(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     source: Mapped[str] = mapped_column(String(255), nullable=False)
     content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
-    metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
 
 class DocumentChunk(Base, UUIDMixin, TimestampMixin):
@@ -32,4 +32,4 @@ class DocumentChunk(Base, UUIDMixin, TimestampMixin):
         nullable=True,
     )
     chunk_index: Mapped[int] = mapped_column(Integer, nullable=False)
-    metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)

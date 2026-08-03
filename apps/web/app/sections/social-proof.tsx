@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
   Avatar,
+  AvatarImage,
   AvatarFallback,
 } from "@sprint-sync/ui"
 import { fadeIn, staggerContainer } from "@sprint-sync/ui/lib/animation"
@@ -30,6 +31,7 @@ const testimonials = [
     author: "Jane Doe",
     role: "VP of Product, Vercel",
     initials: "JD",
+    src: "https://images.unsplash.com/photo-1762505464553-1f4eb1578f23?auto=format&fit=crop&w=80&h=80&crop=faces&q=80",
   },
   {
     quote:
@@ -37,6 +39,7 @@ const testimonials = [
     author: "Alex Lee",
     role: "Engineering Lead, Linear",
     initials: "AL",
+    src: "https://images.unsplash.com/photo-1758518729058-b158e71c5a9b?auto=format&fit=crop&w=80&h=80&crop=faces&q=80",
   },
   {
     quote:
@@ -44,6 +47,7 @@ const testimonials = [
     author: "Maria Kim",
     role: "Design Director, Framer",
     initials: "MK",
+    src: "https://images.unsplash.com/photo-1758518727984-17b37f2f0562?auto=format&fit=crop&w=80&h=80&crop=faces&q=80",
   },
 ]
 
@@ -96,6 +100,7 @@ export function SocialProof() {
                   <p className="text-foreground">{item.quote}</p>
                   <div className="mt-6 flex items-center gap-3">
                     <Avatar>
+                      <AvatarImage src={item.src} alt={item.author} />
                       <AvatarFallback>{item.initials}</AvatarFallback>
                     </Avatar>
                     <div>

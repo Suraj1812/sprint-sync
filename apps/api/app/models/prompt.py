@@ -41,4 +41,4 @@ class PromptVersion(Base, UUIDMixin, TimestampMixin):
     version: Mapped[int] = mapped_column(Integer, nullable=False)
     system: Mapped[str | None] = mapped_column(Text)
     user_template: Mapped[str] = mapped_column(Text, nullable=False)
-    metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)

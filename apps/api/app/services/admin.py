@@ -1,5 +1,7 @@
 """Admin platform services."""
 
+from __future__ import annotations
+
 import secrets
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -20,6 +22,7 @@ from app.repositories.admin_session import admin_session_repository
 from app.repositories.feature_flag import feature_flag_repository
 from app.repositories.organization import organization_repository
 from app.repositories.role import role_repository
+from app.services.audit_log import AuditLogService
 from app.repositories.user import user_repository
 from app.schemas.admin import (
     AdminAuthResponse,

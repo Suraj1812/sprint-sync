@@ -2,7 +2,7 @@
 
 import uuid
 
-from fastapi import Header, Request
+from fastapi import Depends, Header, Request
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,7 +14,7 @@ from app.models.user import User
 
 async def get_current_organization(
     request: Request,
-    db: AsyncSession,
+    db: AsyncSession = Depends(get_db_session),
     user: User = Depends(get_current_user),
     x_organization_id: uuid.UUID | None = Header(None, alias="X-Organization-Id"),
 ) -> Organization:
@@ -66,7 +66,7 @@ async def get_current_organization(
 
 async def get_current_workspace(
     request: Request,
-    db: AsyncSession,
+    db: AsyncSession = Depends(get_db_session),
     user: User = Depends(get_current_user),
     x_workspace_id: uuid.UUID | None = Header(None, alias="X-Workspace-Id"),
 ):

@@ -39,7 +39,7 @@ class Notification(Base, UUIDMixin, TimestampMixin):
     is_read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     archived_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    metadata: Mapped[dict | None] = mapped_column(JSON)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON)
 
 
 class NotificationPreference(Base, UUIDMixin, TimestampMixin):
@@ -72,7 +72,7 @@ class EmailTemplate(Base, UUIDMixin, TimestampMixin):
     layout: Mapped[str | None] = mapped_column(String(100))
     variables: Mapped[list[str]] = mapped_column(JSON, default=list)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    metadata: Mapped[dict | None] = mapped_column(JSON)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON)
 
 
 class CommunicationEvent(Base, UUIDMixin, TimestampMixin):
@@ -105,7 +105,7 @@ class DeliveryAttempt(Base, UUIDMixin, TimestampMixin):
     recipient: Mapped[str] = mapped_column(String(255), nullable=False)
     response: Mapped[str | None] = mapped_column(Text)
     error: Mapped[str | None] = mapped_column(Text)
-    metadata: Mapped[dict | None] = mapped_column(JSON)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON)
 
 
 class Device(Base, UUIDMixin, TimestampMixin):
@@ -121,4 +121,4 @@ class Device(Base, UUIDMixin, TimestampMixin):
     endpoint: Mapped[str | None] = mapped_column(String(500))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     last_used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    metadata: Mapped[dict | None] = mapped_column(JSON)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON)

@@ -7,7 +7,7 @@ from decimal import Decimal
 from sqlalchemy import (
     Boolean,
     DateTime,
-    Decimal as SQLDecimal,
+    Numeric as SQLDecimal,
     ForeignKey,
     Integer,
     JSON,
@@ -26,7 +26,7 @@ class Plan(Base, UUIDMixin, TimestampMixin):
     description: Mapped[str | None] = mapped_column(Text)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_enterprise: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    metadata: Mapped[dict | None] = mapped_column(JSON)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON)
     prices: Mapped[list["Price"]] = relationship(
         "Price",
         order_by="Price.created_at",
@@ -61,7 +61,7 @@ class Price(Base, UUIDMixin, TimestampMixin):
     usage_type: Mapped[str | None] = mapped_column(String(50))  # seat, token, api_call, storage
     trial_days: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    metadata: Mapped[dict | None] = mapped_column(JSON)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON)
 
     plan: Mapped["Plan"] = relationship("Plan", back_populates="prices")
 
@@ -122,7 +122,7 @@ class Subscription(Base, UUIDMixin, TimestampMixin):
     cancel_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     canceled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     seats: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
-    metadata: Mapped[dict | None] = mapped_column(JSON)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON)
 
 
 class Invoice(Base, UUIDMixin, TimestampMixin):
@@ -168,7 +168,7 @@ class Invoice(Base, UUIDMixin, TimestampMixin):
         nullable=False,
     )
     pdf_url: Mapped[str | None] = mapped_column(String(500))
-    metadata: Mapped[dict | None] = mapped_column(JSON)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON)
     due_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
@@ -194,7 +194,7 @@ class Payment(Base, UUIDMixin, TimestampMixin):
     currency: Mapped[str] = mapped_column(String(3), default="usd", nullable=False)
     status: Mapped[str] = mapped_column(String(20), default="pending", nullable=False)
     failure_message: Mapped[str | None] = mapped_column(Text)
-    metadata: Mapped[dict | None] = mapped_column(JSON)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON)
 
 
 class UsageRecord(Base, UUIDMixin, TimestampMixin):
@@ -213,7 +213,7 @@ class UsageRecord(Base, UUIDMixin, TimestampMixin):
     metric: Mapped[str] = mapped_column(String(50), nullable=False)
     quantity: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     recorded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    metadata: Mapped[dict | None] = mapped_column(JSON)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON)
 
 
 class Entitlement(Base, UUIDMixin, TimestampMixin):
@@ -227,7 +227,7 @@ class Entitlement(Base, UUIDMixin, TimestampMixin):
     feature: Mapped[str] = mapped_column(String(100), nullable=False)
     limit: Mapped[int | None] = mapped_column(Integer, nullable=True)
     value: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    metadata: Mapped[dict | None] = mapped_column(JSON)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON)
     plan: Mapped["Plan"] = relationship("Plan", back_populates="entitlements")
 
 

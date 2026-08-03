@@ -19,7 +19,7 @@ class Conversation(Base, UUIDMixin, TimestampMixin):
     title: Mapped[str | None] = mapped_column(String(255))
     provider: Mapped[str] = mapped_column(String(50), nullable=False)
     model: Mapped[str] = mapped_column(String(100), nullable=False)
-    metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
 
 class Message(Base, UUIDMixin, TimestampMixin):

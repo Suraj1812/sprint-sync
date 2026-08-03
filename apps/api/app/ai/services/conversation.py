@@ -1,5 +1,7 @@
 """Conversation service."""
 
+from __future__ import annotations
+
 import uuid
 
 from sqlalchemy import desc, select

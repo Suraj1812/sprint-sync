@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.ai.services.embedding import embedding_service, vector_store
 from app.core.exceptions import NotFoundError
-from app.models.document import Document
+from app.models.document import Document, DocumentChunk
 from app.repositories.base import BaseRepository
 
 

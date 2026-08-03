@@ -29,4 +29,4 @@ class AIUsage(Base, UUIDMixin, TimestampMixin):
     cost_usd: Mapped[float] = mapped_column(default=0.0, nullable=False)
     latency_ms: Mapped[int | None] = mapped_column(nullable=True)
     status: Mapped[str] = mapped_column(String(20), default="ok", nullable=False)
-    metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    record_metadata: Mapped[dict | None] = mapped_column(JSON, nullable=True)

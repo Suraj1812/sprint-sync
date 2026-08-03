@@ -26,16 +26,18 @@ export function ProductShowcase() {
         >
           <motion.div
             variants={fadeIn}
-            className="rounded-2xl border border-border bg-background p-2 shadow-card"
+            className="relative aspect-video w-full rounded-2xl border border-border bg-background p-2 shadow-card"
           >
-            <Image
-              src="/hero-dashboard.svg"
-              alt="SprintSync product dashboard with sprint board, cycle time chart, and team member avatars"
-              width={920}
-              height={640}
-              className="rounded-xl"
-              loading="lazy"
-            />
+            <div className="relative h-full w-full overflow-hidden rounded-xl">
+              <Image
+                src="https://images.unsplash.com/photo-1774600134168-b9ebd714e4e1?auto=format&fit=crop&w=920&q=80"
+                alt="A real product team collaborating during a business presentation"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                loading="lazy"
+              />
+            </div>
           </motion.div>
 
           <div>
