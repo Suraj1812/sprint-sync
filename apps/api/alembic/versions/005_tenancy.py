@@ -39,17 +39,7 @@ def upgrade() -> None:
             nullable=True,
         ),
     )
-    op.add_column(
-        "audit_logs",
-        sa.Column(
-            "workspace_id",
-            sa.Uuid(as_uuid=True),
-            sa.ForeignKey("workspaces.id"),
-            nullable=True,
-        ),
-    )
     op.create_index("ix_audit_logs_organization_id", "audit_logs", ["organization_id"])
-    op.create_index("ix_audit_logs_workspace_id", "audit_logs", ["workspace_id"])
 
     op.create_table(
         "workspaces",
@@ -73,7 +63,18 @@ def upgrade() -> None:
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index("ix_workspaces_organization_id", "workspaces", ["organization_id"])
+    # index is created by the column-level index=True above
+
+    op.add_column(
+        "audit_logs",
+        sa.Column(
+            "workspace_id",
+            sa.Uuid(as_uuid=True),
+            sa.ForeignKey("workspaces.id"),
+            nullable=True,
+        ),
+    )
+    op.create_index("ix_audit_logs_workspace_id", "audit_logs", ["workspace_id"])
 
     op.create_table(
         "organization_members",
@@ -174,7 +175,7 @@ def upgrade() -> None:
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index("ix_invitations_token", "invitations", ["token"])
+    # token column already has unique=True index=True above
 
     op.create_table(
         "custom_roles",
@@ -194,7 +195,7 @@ def upgrade() -> None:
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index("ix_custom_roles_organization_id", "custom_roles", ["organization_id"])
+    # organization_id column already has index=True above
 
     op.create_table(
         "custom_domains",
@@ -214,7 +215,7 @@ def upgrade() -> None:
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index("ix_custom_domains_organization_id", "custom_domains", ["organization_id"])
+    # organization_id column already has index=True above
 
 
 def downgrade() -> None:

@@ -15,6 +15,7 @@ from app.core.audit import audit
 from app.core.exceptions import AuthenticationError, AuthorizationError, NotFoundError
 from app.core.security import create_admin_token, decode_token, hash_password
 from app.models.admin_session import AdminSession
+from app.models.audit_log import AuditLog
 from app.models.feature_flag import FeatureFlag
 from app.models.organization import Organization
 from app.models.user import User

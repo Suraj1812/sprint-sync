@@ -1,11 +1,20 @@
 "use client"
 
-const ADMIN_API = "/api/v1/admin"
+const ADMIN_API = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/v1/admin`
+
+function getToken(): string | null {
+  if (typeof window === "undefined") return null
+  return localStorage.getItem("admin_token")
+}
 
 async function adminFetch(path: string, options: RequestInit = {}) {
+  const token = getToken()
   const res = await fetch(`${ADMIN_API}${path}`, {
     credentials: "include",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     ...options,
   })
 
@@ -51,12 +60,23 @@ export const adminApi = {
       method: "POST",
       body: JSON.stringify(body),
     }),
-  login: (body: object) =>
-    adminFetch("/auth/login", {
+  login: async (body: object) => {
+    const res = await adminFetch("/auth/login", {
       method: "POST",
       body: JSON.stringify(body),
-    }),
-  logout: () => adminFetch("/auth/logout", { method: "POST" }),
+    })
+    if (res?.access_token && typeof window !== "undefined") {
+      localStorage.setItem("admin_token", res.access_token)
+    }
+    return res
+  },
+  logout: async () => {
+    const res = await adminFetch("/auth/logout", { method: "POST" })
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("admin_token")
+    }
+    return res
+  },
   aiChat: (body: object) =>
     adminFetch("/ai/chat", {
       method: "POST",

@@ -7,6 +7,7 @@ Create Date: 2025-01-25 00:00:00.000000
 
 import uuid
 from collections.abc import Sequence
+from datetime import datetime, timezone
 
 import sqlalchemy as sa
 from alembic import op
@@ -107,7 +108,7 @@ def upgrade() -> None:
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index("ix_delivery_attempts_event_id", "delivery_attempts", ["event_id"])
+    # index created by column-level index=True above
 
     op.create_table(
         "devices",
@@ -123,11 +124,24 @@ def upgrade() -> None:
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index("ix_devices_user_id", "devices", ["user_id"])
+    # index created by column-level index=True above
 
     # Seed templates
     op.bulk_insert(
-        "email_templates",
+        sa.table(
+            "email_templates",
+            sa.column("id", sa.Uuid(as_uuid=True)),
+            sa.column("name", sa.String(length=100)),
+            sa.column("locale", sa.String(length=10)),
+            sa.column("version", sa.Integer()),
+            sa.column("subject", sa.String(length=255)),
+            sa.column("html_body", sa.Text()),
+            sa.column("text_body", sa.Text()),
+            sa.column("variables", sa.JSON()),
+            sa.column("is_active", sa.Boolean()),
+            sa.column("created_at", sa.DateTime(timezone=True)),
+            sa.column("updated_at", sa.DateTime(timezone=True)),
+        ),
         [
             {
                 "id": uuid.UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
@@ -139,8 +153,8 @@ def upgrade() -> None:
                 "text_body": "Hi {{ name }}, welcome to {{ app_name }}.",
                 "variables": ["name", "app_name"],
                 "is_active": True,
-                "created_at": "2025-01-25T00:00:00+00:00",
-                "updated_at": "2025-01-25T00:00:00+00:00",
+                "created_at": datetime(2025, 1, 25, tzinfo=timezone.utc),
+                "updated_at": datetime(2025, 1, 25, tzinfo=timezone.utc),
             },
             {
                 "id": uuid.UUID("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
@@ -152,8 +166,8 @@ def upgrade() -> None:
                 "text_body": "Reset your password: {{ link }}",
                 "variables": ["link", "app_name"],
                 "is_active": True,
-                "created_at": "2025-01-25T00:00:00+00:00",
-                "updated_at": "2025-01-25T00:00:00+00:00",
+                "created_at": datetime(2025, 1, 25, tzinfo=timezone.utc),
+                "updated_at": datetime(2025, 1, 25, tzinfo=timezone.utc),
             },
             {
                 "id": uuid.UUID("cccccccc-cccc-cccc-cccc-cccccccccccc"),
@@ -165,8 +179,8 @@ def upgrade() -> None:
                 "text_body": "Join {{ organization }}: {{ link }}",
                 "variables": ["organization", "link"],
                 "is_active": True,
-                "created_at": "2025-01-25T00:00:00+00:00",
-                "updated_at": "2025-01-25T00:00:00+00:00",
+                "created_at": datetime(2025, 1, 25, tzinfo=timezone.utc),
+                "updated_at": datetime(2025, 1, 25, tzinfo=timezone.utc),
             },
         ],
     )

@@ -51,10 +51,14 @@ class UserRepository(BaseRepository[User]):
         return result.scalar_one_or_none()
 
     async def get_active_by_email(self, db: AsyncSession, email: str) -> User | None:
-        stmt = select(User).where(
-            User.email == email,
-            User.is_active.is_(True),
-            User.deleted_at.is_(None),
+        stmt = (
+            select(User)
+            .where(
+                User.email == email,
+                User.is_active.is_(True),
+                User.deleted_at.is_(None),
+            )
+            .options(selectinload(User.role))
         )
         result = await db.execute(stmt)
         return result.scalar_one_or_none()

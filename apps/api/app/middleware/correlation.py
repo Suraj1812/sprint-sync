@@ -26,6 +26,7 @@ class CorrelationIdMiddleware(BaseHTTPMiddleware):
         request.state.correlation_id = correlation_id
 
         start = time.perf_counter()
+        response: Response | None = None
         try:
             response = await call_next(request)
         finally:

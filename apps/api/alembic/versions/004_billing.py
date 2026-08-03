@@ -7,6 +7,7 @@ Create Date: 2025-01-23 00:00:00.000000
 
 import uuid
 from collections.abc import Sequence
+from datetime import datetime, timezone
 from decimal import Decimal
 
 import sqlalchemy as sa
@@ -206,7 +207,16 @@ def upgrade() -> None:
     op.create_index("ix_billing_events_provider_event_id", "billing_events", ["provider_event_id"])
 
     op.bulk_insert(
-        "plans",
+        sa.table(
+            "plans",
+            sa.column("id", sa.Uuid(as_uuid=True)),
+            sa.column("name", sa.String(length=100)),
+            sa.column("description", sa.Text()),
+            sa.column("is_active", sa.Boolean()),
+            sa.column("is_enterprise", sa.Boolean()),
+            sa.column("created_at", sa.DateTime(timezone=True)),
+            sa.column("updated_at", sa.DateTime(timezone=True)),
+        ),
         [
             {
                 "id": uuid.UUID("11111111-1111-1111-1111-111111111111"),
@@ -214,8 +224,8 @@ def upgrade() -> None:
                 "description": "Free forever plan",
                 "is_active": True,
                 "is_enterprise": False,
-                "created_at": "2025-01-23T00:00:00+00:00",
-                "updated_at": "2025-01-23T00:00:00+00:00",
+                "created_at": datetime(2025, 1, 23, tzinfo=timezone.utc),
+                "updated_at": datetime(2025, 1, 23, tzinfo=timezone.utc),
             },
             {
                 "id": uuid.UUID("22222222-2222-2222-2222-222222222222"),
@@ -223,30 +233,38 @@ def upgrade() -> None:
                 "description": "Pro monthly subscription",
                 "is_active": True,
                 "is_enterprise": False,
-                "created_at": "2025-01-23T00:00:00+00:00",
-                "updated_at": "2025-01-23T00:00:00+00:00",
+                "created_at": datetime(2025, 1, 23, tzinfo=timezone.utc),
+                "updated_at": datetime(2025, 1, 23, tzinfo=timezone.utc),
             },
         ],
     )
 
     op.bulk_insert(
-        "entitlements",
+        sa.table(
+            "entitlements",
+            sa.column("id", sa.Uuid(as_uuid=True)),
+            sa.column("plan_id", sa.Uuid(as_uuid=True)),
+            sa.column("feature", sa.String(length=100)),
+            sa.column("limit", sa.Integer()),
+            sa.column("created_at", sa.DateTime(timezone=True)),
+            sa.column("updated_at", sa.DateTime(timezone=True)),
+        ),
         [
             {
                 "id": uuid.UUID("33333333-3333-3333-3333-333333333333"),
                 "plan_id": uuid.UUID("11111111-1111-1111-1111-111111111111"),
                 "feature": "ai_tokens",
                 "limit": 10000,
-                "created_at": "2025-01-23T00:00:00+00:00",
-                "updated_at": "2025-01-23T00:00:00+00:00",
+                "created_at": datetime(2025, 1, 23, tzinfo=timezone.utc),
+                "updated_at": datetime(2025, 1, 23, tzinfo=timezone.utc),
             },
             {
                 "id": uuid.UUID("44444444-4444-4444-4444-444444444444"),
                 "plan_id": uuid.UUID("22222222-2222-2222-2222-222222222222"),
                 "feature": "ai_tokens",
                 "limit": 100000,
-                "created_at": "2025-01-23T00:00:00+00:00",
-                "updated_at": "2025-01-23T00:00:00+00:00",
+                "created_at": datetime(2025, 1, 23, tzinfo=timezone.utc),
+                "updated_at": datetime(2025, 1, 23, tzinfo=timezone.utc),
             },
         ],
     )
